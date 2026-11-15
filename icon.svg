@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="English writing trainer">
+  <defs>
+    <linearGradient id="ew-bg" x1="8" y1="4" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f7dd1"/>
+      <stop offset="1" stop-color="#12538f"/>
+    </linearGradient>
+    <linearGradient id="ew-page" x1="18" y1="18" x2="46" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dcecff"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="url(#ew-bg)"/>
+  <path d="M15 18.5c0-2.5 2-4.5 4.5-4.5H31v32H19.5A4.5 4.5 0 0 0 15 50.5v-32Z" fill="url(#ew-page)" opacity=".96"/>
+  <path d="M49 18.5c0-2.5-2-4.5-4.5-4.5H33v32h11.5A4.5 4.5 0 0 1 49 50.5v-32Z" fill="#ffffff" opacity=".82"/>
+  <path d="M32 14v32" stroke="#2f7dd1" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+  <path d="M20 23h7M20 28h7M37 23h7M37 28h7" stroke="#2f7dd1" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+  <path d="m39.5 37.2 5.1 5.1-2.8 2.8-5.1-5.1v-2.8h2.8Z" fill="#ffd166" stroke="#8a5a00" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="m44.6 42.3 2.1-2.1 1.8 1.8-2.1 2.1z" fill="#fff3c4" stroke="#8a5a00" stroke-width="1" stroke-linejoin="round"/>
+  <circle cx="50" cy="15" r="6.5" fill="#ff8a3d"/>
+  <path d="M47.2 15.2 49.5 17.5 53.2 13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
