@@ -58,6 +58,7 @@ const SYSTEM_EVALUATOR = `你是一位考研英语二阅卷组资深教师，长
 评分维度：
 - 写作：内容要点是否完整、组织衔接是否清晰、语言是否准确、词汇与句式是否丰富、语域与格式是否得体。
 - 翻译：理解是否准确、中文表达是否通顺、句间衔接是否自然、语言是否规范。
+格式宽容度要求：只评价实质性语言问题。不要因为多一个/少一个空格、单词之间多一个空格、标点前后的空格、换行、缩进、段首空格等排版细节扣分，也不要在 issues 中指出这类问题；除非空格导致单词粘连、拼写错误或语义歧义，否则一律忽略空格差异。
 你必须只输出一个 JSON 对象。不要输出 Markdown 代码围栏，不要输出 JSON 之外的任何解释文字。
 JSON 中的中文要自然、具体；引用学生原句时保持原样。`
 
@@ -268,24 +269,45 @@ function normalizeRubric(input, maxScore) {
     })
 }
 
+function normalizeAnswer(value) {
+  return String(value || '')
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+function isWhitespaceOnlyIssue(row) {
+  const text = `${row.problem || ''} ${row.fix || ''} ${row.example || ''}`.toLowerCase()
+  const mentionsWhitespace = /空格|white ?space|spacing|缩进|空行|indent|段首/.test(text)
+  const realError = /粘连|拼写|连写|word boundary|缺少空格导致/.test(text)
+  return mentionsWhitespace && !realError
+}
+
 function normalizeIssues(input) {
   if (!Array.isArray(input)) return []
   return input
     .filter((row) => row && typeof row === 'object')
-    .slice(0, 8)
     .map((row) => ({
       quote: textOf(row.quote),
       problem: textOf(row.problem, '需要改进'),
       fix: textOf(row.fix, '按高分表达重写这一处。'),
+      example: textOf(row.example || row.revision || row.improved),
     }))
+    .filter((row) => !isWhitespaceOnlyIssue(row))
+    .slice(0, 8)
 }
 
 function normalizeReusable(input) {
   if (!Array.isArray(input)) return []
   return input
     .filter((row) => row && typeof row === 'object')
-    .slice(0, 8)
+    .slice(0, 10)
     .map((row) => ({
+      situation: textOf(row.situation || row.scene),
+      logic: textOf(row.logic || row.reasoning),
       expression: textOf(row.expression),
       meaning: textOf(row.meaning),
       usage: textOf(row.usage),
@@ -382,7 +404,12 @@ ${text}
 >>>
 
 请按考研英语二的评分标准批改。分段练习采用 10 分制，高分线为 8 分。评分项建议为：内容达成 3 分、组织衔接 2 分、语言准确 3 分、词汇句式 2 分（翻译则为：理解 3 分、中文表达 3 分、衔接 2 分、语言规范 2 分）。
-必须指出具体问题，并给出可直接替换的改法；改写段要保留学生原意，但达到 8 分以上水平。
+批改前系统已经压缩了多余空格；请不要因为空格、换行、缩进、标点前后空格等排版细节扣分或提出意见。只指出影响语法、语义、搭配、逻辑或表达质量的实质问题。
+请严格按以下四个部分组织内容：
+1. 判分点与优点：rubric 逐项给分，strengths 写做得好的地方。
+2. 问题句与修改：issues 每一条给出原句、问题、修改建议和修改示例。
+3. 可复用逻辑与句式：reusable 按使用场景分类，至少包含 3 类。写作类必须包含“动态数据变化幅度较大时如何描述”“两个数据对比明显时如何描述”，并根据本段需要补充原因、建议、结论等场景；每条写清 situation（中文场景）、logic（中文逻辑）、expression（英文句式框架/表达）、meaning、usage。
+4. 参考修改文：revised 必须是完整修改后的本段，保留学生原意并达到 8 分以上水平，不要只给零散句子。
 只输出以下 JSON：
 {
   "score": 0-10 的数字,
@@ -390,9 +417,9 @@ ${text}
   "summary": "一句话总评",
   "rubric": [{"criterion":"评分项","score":0,"max":0,"comment":"具体判断"}],
   "strengths": ["做得好的地方，最多 4 条"],
-  "issues": [{"quote":"学生原句","problem":"问题","fix":"可直接替换的改法"}],
-  "revised": "修改后的本段",
-  "reusable": [{"expression":"可复用表达","meaning":"中文含义","usage":"适用场景"}],
+  "issues": [{"quote":"学生原句","problem":"问题","fix":"修改建议","example":"修改后的完整句子"}],
+  "reusable": [{"situation":"动态数据变化幅度较大","logic":"先总述变化方向，再用 from...to... 给出幅度","expression":"X witnessed a dramatic increase from A to B.","meaning":"X 从 A 大幅增长到 B","usage":"描述图表中变化最显著的数据"}],
+  "revised": "完整修改后的本段",
   "nextStep": "换题后最该练的一个点"
 }`
 }
@@ -420,7 +447,12 @@ ${text}
 >>>
 
 满分 ${maxScore} 分，高分线为 ${roundHalf(maxScore * 0.8)} 分。评分维度：${dimensions}。
-请给出档次判断、逐段评价、具体语言问题、可执行的修改建议，以及一段达到高分水平的改写（可只改写最需要改的 2—3 个句子，但要在 revised 中说明）。
+批改前系统已经压缩了多余空格；请不要因为空格、换行、缩进、标点前后空格等排版细节扣分或提出意见。只指出影响语法、语义、搭配、逻辑或表达质量的实质问题。
+请严格按以下四个部分组织内容：
+1. 判分点与优点：rubric 逐项给分，sectionComments 逐段评价，strengths 写优点。
+2. 问题句与修改：issues 每一条给出原句、问题、修改建议和修改示例。
+3. 可复用逻辑与句式：reusable 按使用场景分类，至少包含 4 类。必须包含“动态数据变化幅度较大时如何描述”“两个数据对比明显时如何描述”，并补充原因分析、建议/结论等场景；每条写清 situation（中文场景）、logic（中文逻辑）、expression（英文句式框架/表达）、meaning、usage。
+4. 参考修改文：revised 必须是完整修改后的全文，保留学生原意并达到高分水平，不要只列关键句。
 只输出以下 JSON：
 {
   "score": 0-${maxScore} 的数字,
@@ -429,9 +461,9 @@ ${text}
   "rubric": [{"criterion":"评分项","score":0,"max":0,"comment":"具体判断"}],
   "sectionComments": [{"part":"第一段","comment":"该段的具体评价"}],
   "strengths": ["优点，最多 4 条"],
-  "issues": [{"quote":"学生原句","problem":"问题","fix":"可直接替换的改法"}],
-  "revised": "改写示范或关键句改写",
-  "reusable": [{"expression":"可复用表达","meaning":"中文含义","usage":"适用场景"}],
+  "issues": [{"quote":"学生原句","problem":"问题","fix":"修改建议","example":"修改后的完整句子"}],
+  "reusable": [{"situation":"两个数据对比明显","logic":"先并列两组数据，再用 while/whereas 形成对比","expression":"A stood at X, whereas B remained at Y.","meaning":"A 为 X，而 B 仅为 Y","usage":"描述两个对象差距明显的数据"}],
+  "revised": "完整修改后的全文",
   "nextStep": "下一阶段最该补的一个点"
 }`
 }
@@ -439,11 +471,12 @@ ${text}
 async function evaluate(ctx, body) {
   const mode = body.mode === 'full' ? 'full' : 'segment'
   const kind = ['big', 'small', 'translation'].includes(body.kind) ? body.kind : 'big'
-  const text = textOf(body.text)
+  const text = normalizeAnswer(textOf(body.text))
   if (text.length < 10) throw new Error('作答内容太短，至少写一句话再提交。')
   if (text.length > 12000) throw new Error('作答内容过长，请控制在 12000 字符以内。')
   const maxScore = mode === 'full' ? (kind === 'small' ? 10 : 15) : 10
-  const prompt = mode === 'full' ? fullPrompt(body) : segmentPrompt(body)
+  const promptBody = { ...body, text }
+  const prompt = mode === 'full' ? fullPrompt(promptBody) : segmentPrompt(promptBody)
   const result = await complete(ctx, SYSTEM_EVALUATOR, prompt, mode === 'full' ? 3200 : 2400)
   return {
     mode,

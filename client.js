@@ -2156,6 +2156,13 @@ window.__ModuleLoader__.load({
       .ew-empty{font-size:14px}
       .ew-empty h3{font-size:16px}
       .ew-bankCard{padding:14px 16px}
+      .ew-feedbackSection{margin-top:18px;padding-top:16px;border-top:1px solid var(--dsw-alias-border-l1)}
+      .ew-sectionLabel{display:flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.6px;font-weight:700;color:var(--dsw-alias-brand-primary);margin-bottom:10px}
+      .ew-sectionNum{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:7px;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 12%,var(--dsw-alias-bg-base));font-size:10.5px;letter-spacing:0;color:var(--dsw-alias-brand-primary);flex:none}
+      .ew-reuseSituation{display:inline-flex;align-items:center;padding:1.5px 7px;margin-bottom:4px;border-radius:999px;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 9%,transparent);color:var(--dsw-alias-brand-primary);font-size:11px;font-weight:600;line-height:1.5}
+      .ew-reuseLogic{font-size:12.5px;line-height:1.6;color:var(--dsw-alias-label-secondary);margin:3px 0 4px}
+      .ew-issueExample{margin:6px 0 0;padding:8px 10px;border-radius:7px;background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 7%,var(--dsw-alias-bg-base));border:1px solid color-mix(in srgb,var(--dsw-alias-state-success-primary) 30%,var(--dsw-alias-border-l1));font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:13px;line-height:1.7;color:var(--dsw-alias-label-primary)}
+      .ew-issueExample b{font-family:inherit;color:var(--dsw-alias-state-success-primary)}
       @media(max-width:940px){.ew-practice{grid-template-columns:1fr}.ew-heroArt{display:none}}
       @media(max-width:700px){.ew-headStats{display:none}.ew-wrap{padding:16px 14px 60px}.ew-rubricRow{grid-template-columns:78px minmax(0,1fr) 38px}.ew-homeTitle{font-size:24px}.ew-homeDesc{font-size:14px}.ew-stageTitle{font-size:19px}.ew-chooserTitle{font-size:19px}.ew-topicGrid{grid-template-columns:1fr}.ew-topicCard{min-height:0}.ew-writing{gap:14px}.ew-card{padding:16px}.ew-textarea{min-height:260px}}
     `
@@ -3092,12 +3099,17 @@ window.__ModuleLoader__.load({
         ),
         note ? h('p', { className: 'ew-feedbackNote' + noteClass }, note) : null,
         local ? h('p', { className: 'ew-bankSub', style: { marginBottom: 10 } }, t('label.localNotice')) : null,
-        Array.isArray(feedback.rubric) && feedback.rubric.length
-          ? h(
-              'div',
-              null,
-              h('div', { className: 'ew-subhead' }, t('label.rubric')),
-              h(
+        h(
+          'div',
+          { className: 'ew-feedbackSection' },
+          h(
+            'div',
+            { className: 'ew-sectionLabel' },
+            h('span', { className: 'ew-sectionNum' }, '01'),
+            '判分点与优点',
+          ),
+          Array.isArray(feedback.rubric) && feedback.rubric.length
+            ? h(
                 'div',
                 { className: 'ew-rubric' },
                 feedback.rubric.map((row, index) =>
@@ -3116,45 +3128,50 @@ window.__ModuleLoader__.load({
                     h('span', { className: 'ew-rubricScore' }, `${row.score}/${row.max}`),
                   ),
                 ),
-              ),
-            )
-          : null,
-        Array.isArray(feedback.strengths) && feedback.strengths.length
-          ? h(
-              'div',
-              null,
-              h('div', { className: 'ew-subhead' }, t('label.strengths')),
-              h(
+              )
+            : null,
+          Array.isArray(feedback.strengths) && feedback.strengths.length
+            ? h(
                 'div',
-                { className: 'ew-strengths' },
-                feedback.strengths.map((line, index) => h('span', { className: 'ew-strength', key: index }, line)),
-              ),
-            )
-          : null,
-        Array.isArray(feedback.sectionComments) && feedback.sectionComments.length
-          ? h(
-              'div',
-              null,
-              h('div', { className: 'ew-subhead' }, '逐段评价'),
-              h(
+                { style: { marginTop: 10 } },
+                h('div', { className: 'ew-subhead' }, t('label.strengths')),
+                h(
+                  'div',
+                  { className: 'ew-strengths' },
+                  feedback.strengths.map((line, index) => h('span', { className: 'ew-strength', key: index }, line)),
+                ),
+              )
+            : null,
+          Array.isArray(feedback.sectionComments) && feedback.sectionComments.length
+            ? h(
                 'div',
-                { className: 'ew-issues' },
-                feedback.sectionComments.map((row, index) =>
-                  h(
-                    'div',
-                    { className: 'ew-issue', key: index },
-                    h('p', { className: 'ew-issueProblem' }, h('b', null, row.part + '：'), row.comment),
+                null,
+                h('div', { className: 'ew-subhead' }, '逐段评价'),
+                h(
+                  'div',
+                  { className: 'ew-issues' },
+                  feedback.sectionComments.map((row, index) =>
+                    h(
+                      'div',
+                      { className: 'ew-issue', key: index },
+                      h('p', { className: 'ew-issueProblem' }, h('b', null, row.part + '：'), row.comment),
+                    ),
                   ),
                 ),
-              ),
-            )
-          : null,
-        Array.isArray(feedback.issues) && feedback.issues.length
-          ? h(
-              'div',
-              null,
-              h('div', { className: 'ew-subhead' }, t('label.issues')),
-              h(
+              )
+            : null,
+        ),
+        h(
+          'div',
+          { className: 'ew-feedbackSection' },
+          h(
+            'div',
+            { className: 'ew-sectionLabel' },
+            h('span', { className: 'ew-sectionNum' }, '02'),
+            '问题句与修改建议',
+          ),
+          Array.isArray(feedback.issues) && feedback.issues.length
+            ? h(
                 'div',
                 { className: 'ew-issues' },
                 feedback.issues.map((row, index) =>
@@ -3163,39 +3180,24 @@ window.__ModuleLoader__.load({
                     { className: 'ew-issue', key: index },
                     row.quote ? h('p', { className: 'ew-issueQuote' }, '“' + row.quote + '”') : null,
                     h('p', { className: 'ew-issueProblem' }, row.problem),
-                    row.fix ? h('p', { className: 'ew-issueFix' }, h('b', null, '改法：'), row.fix) : null,
+                    row.fix ? h('p', { className: 'ew-issueFix' }, h('b', null, '修改建议：'), row.fix) : null,
+                    row.example ? h('p', { className: 'ew-issueExample' }, h('b', null, '修改示例：'), row.example) : null,
                   ),
                 ),
-              ),
-            )
-          : null,
-        feedback.revised
-          ? h(
-              'div',
-              null,
-              h(
-                'div',
-                { className: 'ew-subhead' },
-                t('label.revised'),
-                h(
-                  'button',
-                  {
-                    type: 'button',
-                    className: 'ew-link',
-                    onClick: () => props.onCopy(feedback.revised),
-                  },
-                  t('action.copy'),
-                ),
-              ),
-              h('pre', { className: 'ew-revised' }, feedback.revised),
-            )
-          : null,
-        Array.isArray(feedback.reusable) && feedback.reusable.length
-          ? h(
-              'div',
-              null,
-              h('div', { className: 'ew-subhead' }, t('label.reusable')),
-              h(
+              )
+            : h('p', { className: 'ew-bankSub' }, '本次没有发现需要单独修改的句子。'),
+        ),
+        h(
+          'div',
+          { className: 'ew-feedbackSection' },
+          h(
+            'div',
+            { className: 'ew-sectionLabel' },
+            h('span', { className: 'ew-sectionNum' }, '03'),
+            '可复用逻辑与句式',
+          ),
+          Array.isArray(feedback.reusable) && feedback.reusable.length
+            ? h(
                 'div',
                 { className: 'ew-reuse' },
                 feedback.reusable.map((row, index) =>
@@ -3205,6 +3207,8 @@ window.__ModuleLoader__.load({
                     h(
                       'div',
                       { className: 'ew-reuseText' },
+                      row.situation ? h('div', { className: 'ew-reuseSituation' }, row.situation) : null,
+                      row.logic ? h('div', { className: 'ew-reuseLogic' }, row.logic) : null,
                       h('div', { className: 'ew-reuseExpr' }, row.expression),
                       h(
                         'div',
@@ -3223,12 +3227,37 @@ window.__ModuleLoader__.load({
                     ),
                   ),
                 ),
-              ),
-            )
-          : null,
-        feedback.nextStep
-          ? h('div', { className: 'ew-next' }, h('b', null, t('label.nextStep') + '：'), feedback.nextStep)
-          : null,
+              )
+            : h('p', { className: 'ew-bankSub' }, '本次没有生成可复用句式。'),
+          feedback.nextStep
+            ? h('div', { className: 'ew-next' }, h('b', null, t('label.nextStep') + '：'), feedback.nextStep)
+            : null,
+        ),
+        h(
+          'div',
+          { className: 'ew-feedbackSection' },
+          h(
+            'div',
+            { className: 'ew-sectionLabel' },
+            h('span', { className: 'ew-sectionNum' }, '04'),
+            '参考修改文',
+            feedback.revised
+              ? h(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'ew-link',
+                    style: { marginLeft: 'auto' },
+                    onClick: () => props.onCopy(feedback.revised),
+                  },
+                  t('action.copy'),
+                )
+              : null,
+          ),
+          feedback.revised
+            ? h('pre', { className: 'ew-revised' }, feedback.revised)
+            : h('p', { className: 'ew-bankSub' }, '本次没有生成完整修改文。'),
+        ),
         h(
           'div',
           { className: 'ew-actions' },
@@ -3347,7 +3376,8 @@ window.__ModuleLoader__.load({
                     { className: 'ew-issue', key: index },
                     row.quote ? h('p', { className: 'ew-issueQuote' }, '“' + row.quote + '”') : null,
                     h('p', { className: 'ew-issueProblem' }, row.problem || ''),
-                    row.fix ? h('p', { className: 'ew-issueFix' }, h('b', null, '改法：'), row.fix) : null,
+                    row.fix ? h('p', { className: 'ew-issueFix' }, h('b', null, '修改建议：'), row.fix) : null,
+                    row.example ? h('p', { className: 'ew-issueExample' }, h('b', null, '修改示例：'), row.example) : null,
                   ),
                 ),
               ),
@@ -3389,6 +3419,8 @@ window.__ModuleLoader__.load({
                     h(
                       'div',
                       { className: 'ew-reuseText' },
+                      row.situation ? h('div', { className: 'ew-reuseSituation' }, row.situation) : null,
+                      row.logic ? h('div', { className: 'ew-reuseLogic' }, row.logic) : null,
                       h('div', { className: 'ew-reuseExpr' }, row.expression),
                       h(
                         'div',
