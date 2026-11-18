@@ -543,6 +543,24 @@ window.__ModuleLoader__.load({
         note: '2021 年英语二大作文真题：柱状图展示某市居民体育锻炼方式调查。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2022-big',
+        source: 'real',
+        year: 2022,
+        kind: 'big',
+        chartType: '柱状图',
+        title: 'China’s express delivery volume (2018–2020)',
+        titleZh: '2018—2020 年我国快递业务量变动情况（单位：10 亿件）',
+        data: [
+          '2018 年：总体 51，农村 12（单位：10 亿件）',
+          '2019 年：总体 64，农村 15（单位：10 亿件）',
+          '2020 年：总体 83，农村 30（单位：10 亿件）',
+        ],
+        directions:
+          'Write an essay based on chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)',
+        note: '2022 年英语二大作文真题：柱状图对比 2018—2020 年全国快递业务量与农村快递业务量。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -1447,6 +1465,15 @@ window.__ModuleLoader__.load({
         labels: ['独自锻炼', '和朋友一起', '和家人一起', '团体活动'],
         series: [{ name: '比例', values: [54.3, 47.7, 23.9, 15.8], unit: '%' }],
         yLabel: '比例（%）',
+      },
+      'real-2022-big': {
+        type: 'bar',
+        labels: ['2018', '2019', '2020'],
+        series: [
+          { name: '总体', values: [51, 64, 83], unit: '10亿件' },
+          { name: '农村', values: [12, 15, 30], unit: '10亿件' },
+        ],
+        yLabel: '快递业务量（10 亿件）',
       },
       'ai-big-1': {
         type: 'bar',
