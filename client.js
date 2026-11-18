@@ -524,6 +524,25 @@ window.__ModuleLoader__.load({
         note: '2020 年英语二大作文真题：饼图展示大学生手机阅读的主要目的。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2021-big',
+        source: 'real',
+        year: 2021,
+        kind: 'big',
+        chartType: '柱状图',
+        title: 'Ways of physical exercise among residents in a city',
+        titleZh: '某市居民体育锻炼方式调查',
+        data: [
+          '独自锻炼：54.30%',
+          '和朋友一起：47.70%',
+          '和家人一起：23.90%',
+          '团体活动：15.80%',
+        ],
+        directions:
+          'Write an essay based on chart below. In your writing, you should 1) interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)',
+        note: '2021 年英语二大作文真题：柱状图展示某市居民体育锻炼方式调查。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -1384,6 +1403,12 @@ window.__ModuleLoader__.load({
         labels: ['学习知识', '消磨时间', '获取信息', '其他'],
         values: [59.5, 21.3, 17.0, 2.2],
         unit: '%',
+      },
+      'real-2021-big': {
+        type: 'bar',
+        labels: ['独自锻炼', '和朋友一起', '和家人一起', '团体活动'],
+        series: [{ name: '比例', values: [54.3, 47.7, 23.9, 15.8], unit: '%' }],
+        yLabel: '比例（%）',
       },
       'ai-big-1': {
         type: 'bar',
