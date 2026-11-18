@@ -1247,6 +1247,28 @@ window.__ModuleLoader__.load({
         note: '2021 年英语二翻译真题：注意“that we didn\'t expect”定语从句和“be flattered to”的理解。',
         guidance: { translation: '“a boost in mood and feelings of belonging”可译成“心情的提升和归属感”；“be flattered to receive your attention”不要直译成“被奉承”。' },
       },
+      {
+        id: 'real-2022-trans',
+        source: 'real',
+        year: 2022,
+        kind: 'translation',
+        title: 'Painting and creative problem-solving',
+        titleZh: '2022 年英译汉：绘画中的意外与创造力',
+        passage:
+          'Although we try our best, sometimes our paintings rarely turn out as originally planned. Changes in the light, the limitations of your painting materials, and the lack of experience and technique mean that what you start out trying to achieve may not come to life the way that you expected.\n\nAlthough this can be frustrating and disappointing, it turns out that this can actually be good for you. Unexpected results have two benefits: you pretty quickly learn to deal with disappointment and realize that when one door closes, another opens. You also quickly learn to adapt and come up with creative solutions to the problems the painting presents and thinking outside the box will become your second nature.\n\nIn fact, creative problem-solving skills are incredibly useful in daily life, with which you are more likely to be able to find a solution when a problem arises.',
+        referencePoints: [
+          'turn out as originally planned 结果如最初计划的那样',
+          'come to life 实现；生动呈现',
+          'frustrating and disappointing 令人沮丧和失望的',
+          'when one door closes, another opens 一扇门关闭，另一扇门打开',
+          'thinking outside the box 跳出框框思考',
+          'become your second nature 成为你的第二天性/习惯',
+          'creative problem-solving skills 创造性解决问题的能力',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2022 年英语二翻译真题：注意“with which”定语从句和“second nature”的意译。',
+        guidance: { translation: '“thinking outside the box”可译成“跳出固有思维”；“second nature”可译成“习惯成自然”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
