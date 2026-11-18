@@ -845,6 +845,22 @@ window.__ModuleLoader__.load({
         note: '2021 年英语二小作文真题：邀请 + 告知细节。',
         guidance: SMALL_GUIDE,
       },
+      {
+        id: 'real-2022-small',
+        source: 'real',
+        year: 2022,
+        kind: 'small',
+        letterType: '邀请信',
+        title: 'An email about a campus food festival',
+        titleZh: '向国际学生介绍校园美食节并邀请参加',
+        scenario: '你正在策划一场校园美食节，写信给学校的国际学生。',
+        recipient: 'the international students in your university',
+        keyPoints: ['介绍校园美食节', '邀请国际学生参加'],
+        directions:
+          'Suppose you are planning a campus food festival. Write an email to the international students in your university to [1] introduce the food festival, [2] invite them to participate. You should write neatly on ANSWER SHEET 2. Do not sign your own name at the end of the e-mail. Use “Li Ming” instead. Do not write the address. (10 points)',
+        note: '2022 年英语二小作文真题：介绍 + 邀请。',
+        guidance: SMALL_GUIDE,
+      },
     ]
 
     const AI_SMALL = [
