@@ -1191,6 +1191,28 @@ window.__ModuleLoader__.load({
         note: '2020 年英语二翻译真题：注意“up to us”和“only if we let them”。',
         guidance: { translation: '“Failures stop us only if we let them”可译成“只有我们自己放弃，失败才会击垮我们”。' },
       },
+      {
+        id: 'real-2021-trans',
+        source: 'real',
+        year: 2021,
+        kind: 'translation',
+        title: 'Talking to strangers',
+        titleZh: '2021 年英译汉：与陌生人交谈',
+        passage:
+          'We tend to think that friends and family members are our biggest sources of connection, laughter and warmth. While that may well be true, researchers have also recently found that interacting with strangers actually brings a boost in mood and feelings of belonging that we didn\'t expect.\n\nIn one series of studies, researchers instructed Chicago-area commuters using public transportation to strike up a conversation with someone near them. On average, participants who followed this instruction felt better than those who had been told to stand or sit in silence. The researchers also argued that when we shy away from casual interactions with strangers, it is often due to a misplaced anxiety that they might not want to talk to us. Much of the time, however, this belief is false. As it turns out, many people are actually perfectly willing to talk — and may even be flattered to receive your attention.',
+        referencePoints: [
+          'be a source of connection 是联系/联结的来源',
+          'interact with strangers 与陌生人互动',
+          'a boost in mood 心情提升',
+          'strike up a conversation 攀谈；开始交谈',
+          'shy away from 回避；退缩',
+          'a misplaced anxiety 一种错位的焦虑',
+          'be flattered to receive your attention 因受到关注而感到荣幸',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2021 年英语二翻译真题：注意“that we didn\'t expect”定语从句和“be flattered to”的理解。',
+        guidance: { translation: '“a boost in mood and feelings of belonging”可译成“心情的提升和归属感”；“be flattered to receive your attention”不要直译成“被奉承”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
