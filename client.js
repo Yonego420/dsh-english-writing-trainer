@@ -1551,6 +1551,15 @@ window.__ModuleLoader__.load({
 
     /* ---------------------------------------------------------------- helpers */
 
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result || ''))
+        reader.onerror = () => reject(reader.error || new Error('读取图片失败'))
+        reader.readAsDataURL(file)
+      })
+    }
+
     function countEnglishWords(text) {
       const matches = String(text || '').match(/[A-Za-z][A-Za-z'’-]*/g)
       return matches ? matches.length : 0
@@ -2236,6 +2245,7 @@ window.__ModuleLoader__.load({
       const progress = props.progress || emptyItem()
       const attempts = Number(progress.attempts) || 0
       const best = Number(progress.best) || 0
+      const itemMax = item.kind === 'translation' ? 15 : 10
       return h(
         'button',
         {
@@ -2261,7 +2271,7 @@ window.__ModuleLoader__.load({
           h(
             'span',
             { style: { marginLeft: 'auto' } },
-            best ? `最高 ${best}/10` : '自由训练',
+            best ? `最高 ${best}/${itemMax}` : '自由训练',
           ),
         ),
       )
@@ -2889,10 +2899,22 @@ window.__ModuleLoader__.load({
             { style: { minWidth: 0 } },
             h('div', { className: 'ew-miniLabel' }, t('label.topic')),
             h('h2', { className: 'ew-chooserTitle' }, t('label.chooseTopic')),
-            h('p', { className: 'ew-chooserDesc' }, '选一道题进入写作；进入后不再显示选题列表。'),
+            h('p', { className: 'ew-chooserDesc' }, '选一道题进入写作；也可以上传题目图片，让 AI 识别后加入题库。'),
           ),
           h('span', { className: 'ew-spacer' }),
           h('span', { className: 'ew-badge' }, `${topics.length} 道`),
+          props.onAddImage
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'ew-btn ew-btnGhost',
+                  disabled: props.addingImage,
+                  onClick: props.onAddImage,
+                },
+                props.addingImage ? 'AI 识别中…' : '上传图片添加题目',
+              )
+            : null,
           props.onGenerate
             ? h(
                 'button',
@@ -2956,6 +2978,7 @@ window.__ModuleLoader__.load({
                       ? h('span', { className: 'ew-badge' }, topic.chartType || topic.letterType)
                       : null,
                     topic.aiGenerated ? h('span', { className: 'ew-badge' }, t('label.aiGenerated')) : null,
+                    topic.imageImported ? h('span', { className: 'ew-badge ew-badgeBrand' }, '图片导入') : null,
                   ),
                   h('div', { className: 'ew-topicCardTitle' }, topic.titleZh || topic.title),
                   h('div', { className: 'ew-topicCardSub' }, topic.title || ''),
@@ -3476,6 +3499,7 @@ window.__ModuleLoader__.load({
       const [error, setError] = useState(draft && draft.error ? draft.error : '')
       const [toast, setToast] = useState('')
       const [generating, setGenerating] = useState(false)
+      const [addingImage, setAddingImage] = useState(false)
       const [examKind, setExamKind] = useState(draft && draft.examKind ? draft.examKind : 'big')
       const [examStage, setExamStage] = useState(draft && draft.examStage ? draft.examStage : 'pick')
       const [examSource, setExamSource] = useState(draft && draft.examSource ? draft.examSource : 'real')
@@ -3489,6 +3513,7 @@ window.__ModuleLoader__.load({
       const toastTimer = useRef(null)
       const feedbackRef = useRef(null)
       const textareaRef = useRef(null)
+      const imageInputRef = useRef(null)
       const hydrated = useRef(false)
       const syncTimer = useRef(null)
 
@@ -3760,7 +3785,7 @@ window.__ModuleLoader__.load({
             topic: currentTopic,
             text: value,
             attempt: current.attempts + 1,
-            maxScore: 10,
+            maxScore: selectedItem.kind === 'translation' ? 15 : 10,
           }
           const response = await postJson(API + '/evaluate', body)
           let evaluation = response.evaluation
@@ -3876,6 +3901,48 @@ window.__ModuleLoader__.load({
           setGenerating(false)
         }
       }, [currentTopic, generating, selectedItem, showToast, topics])
+
+      const addTopicFromImage = useCallback(async (event) => {
+        const file = event && event.target && event.target.files ? event.target.files[0] : null
+        if (!selectedItem || !file) return
+        if (!file.type || !file.type.startsWith('image/')) {
+          setError('请选择图片文件（PNG / JPG / WebP）。')
+          return
+        }
+        if (file.size > 15 * 1024 * 1024) {
+          setError('图片太大，请压缩到 15MB 以内。')
+          return
+        }
+        setAddingImage(true)
+        setError('')
+        try {
+          const dataUrl = await readFileAsDataUrl(file)
+          const response = await postJson(API + '/extract-topic', {
+            imageData: dataUrl,
+            mediaType: file.type,
+            kind: selectedItem.kind,
+            itemId: selectedItem.id,
+            part: selectedItem.part,
+          })
+          if (!response.topic) throw new Error('AI 没有识别出题目。')
+          setState((prev) => ({
+            ...prev,
+            customTopics: [response.topic, ...prev.customTopics].slice(0, 40),
+          }))
+          setSource('ai')
+          setTopicId(response.topic.id)
+          setPracticeStage('write')
+          setText('')
+          setFeedback(null)
+          setOutcome(null)
+          showToast('题目已识别并加入题库')
+        } catch (err) {
+          setError('题目识别失败：' + String((err && err.message) || err))
+        } finally {
+          setAddingImage(false)
+          if (event && event.target) event.target.value = ''
+        }
+      }, [selectedItem, showToast])
 
       const startExam = useCallback((kind) => {
         setExamKind(kind)
@@ -4077,7 +4144,7 @@ window.__ModuleLoader__.load({
           ),
           h('span', { className: 'ew-spacer' }),
           h('span', { className: 'ew-badge' }, `已练 ${progress.attempts || 0} 次`),
-          progress.best ? h('span', { className: 'ew-badge' }, `最高 ${progress.best}/10`) : null,
+          progress.best ? h('span', { className: 'ew-badge' }, `最高 ${progress.best}/${selectedItem.kind === 'translation' ? 15 : 10}`) : null,
           practiceStage === 'write'
             ? h(
                 'button',
@@ -4092,12 +4159,23 @@ window.__ModuleLoader__.load({
             'div',
             { className: 'ew-writing' },
             header,
+            h('input', {
+              ref: imageInputRef,
+              type: 'file',
+              accept: 'image/*',
+              style: { display: 'none' },
+              onChange: addTopicFromImage,
+            }),
             h(TopicChooser, {
               t,
               topics,
               current: topicId ? currentTopic : null,
               source,
               generating,
+              addingImage,
+              onAddImage: () => {
+                if (imageInputRef.current) imageInputRef.current.click()
+              },
               onSource: (next) => {
                 setSource(next)
                 setTopicId(null)

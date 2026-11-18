@@ -66,6 +66,10 @@ const SYSTEM_TOPIC = `你是考研英语二命题教师。你熟悉英语二大�
 你只输出一个 JSON 对象，不要输出 Markdown 代码围栏，不要输出 JSON 之外的任何文字。
 题目必须原创、贴近真题风格、数据自洽、适合课堂训练，不得照抄任何现有真题原文。`
 
+const SYSTEM_IMAGE_EXTRACTOR = `你是一位考研英语二资料整理教师，擅长从题目图片中准确识别英文题干、图表数据和写作要求。
+请只提取图片中实际存在的内容，不要编造图片中没有的数据、年份或要求；看不清的字段可以留空，但不要猜测。
+你只输出一个 JSON 对象，不要输出 Markdown 代码围栏，不要输出 JSON 之外的任何文字。`
+
 function json(res, status, body) {
   const text = JSON.stringify(body)
   res.writeHead(status, {
@@ -190,7 +194,7 @@ async function effortFor(ctx, provider, model) {
   }
 }
 
-async function complete(ctx, system, user, maxTokens) {
+async function complete(ctx, system, user, maxTokens, images = []) {
   const { provider, model } = await pickModel(ctx)
   const reasoningEffort = await effortFor(ctx, provider, model)
   const controller = new AbortController()
@@ -205,7 +209,7 @@ async function complete(ctx, system, user, maxTokens) {
       provider,
       model,
       system,
-      messages: [{ role: 'user', content: [{ type: 'text', text: user }] }],
+      messages: [{ role: 'user', content: [{ type: 'text', text: user }, ...images] }],
       temperature: 0.2,
       ...(reasoningEffort ? { reasoningEffort } : {}),
       maxTokens: Math.max(maxTokens, 6000),
@@ -387,7 +391,11 @@ function segmentPrompt(body) {
   const text = textOf(body.text)
   const attempt = Math.max(1, Number(body.attempt) || 1)
   const recent = Array.isArray(body.recentScores) ? body.recentScores.filter((n) => Number.isFinite(Number(n))).slice(-5) : []
-  const maxScore = 10
+  const maxScore = kind === 'translation' ? 15 : 10
+  const rubric =
+    kind === 'translation'
+      ? '理解 4 分、中文表达 4 分、衔接 3 分、语言规范 4 分'
+      : '内容达成 3 分、组织衔接 2 分、语言准确 3 分、词汇句式 2 分'
   return `请批改一份考研英语二的分段练习。
 
 【训练项目】${ITEM_LABEL[itemId] || itemId}
@@ -403,7 +411,7 @@ ${topicBrief(topic)}
 ${text}
 >>>
 
-请按考研英语二的评分标准批改。分段练习采用 10 分制，高分线为 8 分。评分项建议为：内容达成 3 分、组织衔接 2 分、语言准确 3 分、词汇句式 2 分（翻译则为：理解 3 分、中文表达 3 分、衔接 2 分、语言规范 2 分）。
+请按考研英语二的评分标准批改。分段练习采用 ${maxScore} 分制，高分线为 ${roundHalf(maxScore * 0.8)} 分。评分项建议为：${rubric}。
 批改前系统已经压缩了多余空格；请不要因为空格、换行、缩进、标点前后空格等排版细节扣分或提出意见。只指出影响语法、语义、搭配、逻辑或表达质量的实质问题。
 请严格按以下四个部分组织内容：
 1. 判分点与优点：rubric 逐项给分，strengths 写做得好的地方。
@@ -412,7 +420,7 @@ ${text}
 4. 参考修改文：revised 必须是完整修改后的本段，保留学生原意并达到 8 分以上水平，不要只给零散句子。
 只输出以下 JSON：
 {
-  "score": 0-10 的数字,
+  "score": 0-${maxScore} 的数字,
   "band": "例如：第五档 / 第四档",
   "summary": "一句话总评",
   "rubric": [{"criterion":"评分项","score":0,"max":0,"comment":"具体判断"}],
@@ -474,7 +482,7 @@ async function evaluate(ctx, body) {
   const text = normalizeAnswer(textOf(body.text))
   if (text.length < 10) throw new Error('作答内容太短，至少写一句话再提交。')
   if (text.length > 12000) throw new Error('作答内容过长，请控制在 12000 字符以内。')
-  const maxScore = mode === 'full' ? (kind === 'small' ? 10 : 15) : 10
+  const maxScore = mode === 'full' ? (kind === 'small' ? 10 : 15) : kind === 'translation' ? 15 : 10
   const promptBody = { ...body, text }
   const prompt = mode === 'full' ? fullPrompt(promptBody) : segmentPrompt(promptBody)
   const result = await complete(ctx, SYSTEM_EVALUATOR, prompt, mode === 'full' ? 3200 : 2400)
@@ -652,6 +660,109 @@ async function generateTopic(ctx, body) {
   }
 }
 
+function imageTopicPrompt(body) {
+  const kind = ['big', 'small', 'translation'].includes(body.kind) ? body.kind : 'big'
+  const itemId = textOf(body.itemId)
+  const part = Number(body.part) || 0
+  const task = itemId ? ITEM_LABEL[itemId] || itemId : kind === 'translation' ? '翻译' : kind === 'small' ? '小作文' : '大作文'
+  if (kind === 'translation') {
+    return `请识别图片中的考研英语二翻译题，提取为结构化题目。当前训练项目：${task}。
+
+只输出 JSON：
+{
+  "title": "English title",
+  "titleZh": "中文标题",
+  "passage": "图片中的英文原文，保持原文，不要改写",
+  "referencePoints": ["参考要点 1", "参考要点 2"],
+  "directions": "图片中的英文题目说明；看不清可留空",
+  "guidance": {"translation": "翻译提示"}
+}`
+  }
+  if (kind === 'small') {
+    return `请识别图片中的考研英语二小作文题，提取为结构化题目。当前训练项目：${task}。
+
+只输出 JSON：
+{
+  "title": "English title",
+  "titleZh": "中文标题",
+  "letterType": "建议信 / 邀请信 / 感谢信 / 道歉信 / 投诉信 / 通知 / 推荐信等",
+  "scenario": "中文情景说明",
+  "recipient": "写作对象",
+  "keyPoints": ["要点 1", "要点 2", "要点 3"],
+  "directions": "图片中的英文题目说明，保持原文",
+  "guidance": {"p1": "第一段写法", "p2": "第二段写法", "p3": "第三段写法"}
+}`
+  }
+  return `请识别图片中的考研英语二大作文题，提取为结构化题目。当前训练项目：${task}${part ? `（第 ${part} 段）` : ''}。
+
+请同时识别图表类型、图表标题、数据点和题目的英文说明。只输出 JSON：
+{
+  "title": "English chart title",
+  "titleZh": "中文标题",
+  "chartType": "柱状图 / 折线图 / 饼图 / 表格",
+  "data": ["2008 年：……", "2010 年：……"],
+  "chart": {
+    "type": "bar",
+    "labels": ["2008", "2010"],
+    "series": [{"name": "系列名", "values": [1, 2], "unit": "%", "axis": "left"}],
+    "yLabel": "纵轴说明"
+  },
+  "directions": "图片中的英文题目说明，保持原文",
+  "guidance": {"p1": "第一段写法", "p2": "第二段写法", "p3": "第三段写法"}
+}
+如果是饼图，chart 用 {"type":"pie","labels":[...],"values":[...],"unit":"%"}；如果是表格，chart 用 {"type":"table","columns":[...],"rows":[[...]]}。`
+}
+
+async function extractTopicFromImage(ctx, body) {
+  const kind = ['big', 'small', 'translation'].includes(body.kind) ? body.kind : 'big'
+  const raw = String(body.imageData || '').replace(/^data:[^;]+;base64,/, '')
+  if (!raw) throw new Error('没有收到图片数据。')
+  const bytes = Buffer.from(raw, 'base64')
+  if (!bytes.length) throw new Error('图片数据无法解码。')
+  if (bytes.length > 15 * 1024 * 1024) throw new Error('图片太大，请压缩到 15MB 以内。')
+  const mediaType = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'].includes(body.mediaType)
+    ? body.mediaType
+    : 'image/jpeg'
+  const attachments = ctx.get('attachments')
+  if (!attachments || typeof attachments.saveImage !== 'function') {
+    throw new Error('当前环境没有附件服务，无法保存题目图片。')
+  }
+  const { provider, model } = await pickModel(ctx)
+  try {
+    const info = await ctx.llm.resolveModelInfo(provider, model)
+    if (Array.isArray(info.inputModalities) && !info.inputModalities.includes('image')) {
+      throw new Error('当前默认模型不支持图片输入，请先在设置中切换到支持视觉的模型，再上传题目图片。')
+    }
+  } catch (error) {
+    if (String(error && error.message).includes('不支持图片')) throw error
+    /* if capability lookup is unavailable, still try the request */
+  }
+  const image = await attachments.saveImage({
+    data: new Uint8Array(bytes),
+    mediaType,
+    name: 'english-question-image',
+  })
+  const prompt = imageTopicPrompt(body)
+  const result = await complete(
+    ctx,
+    SYSTEM_IMAGE_EXTRACTOR,
+    prompt,
+    2400,
+    [{ type: 'image', attachment: image }],
+  )
+  if (!result.parsed) throw new Error('AI 没有从图片中提取出合法题目，请换一张更清晰的图片重试。')
+  const topic = normalizeGeneratedTopic(result.parsed, kind)
+  return {
+    topic: {
+      ...topic,
+      id: `img-${Date.now().toString(36)}`,
+      aiGenerated: false,
+      imageImported: true,
+    },
+    model: `${result.provider}/${result.model}`,
+  }
+}
+
 async function handle(req, res, ctx) {
   const url = new URL(req.url || '/', 'http://127.0.0.1')
   const route = url.pathname.slice(url.pathname.startsWith(PREFIX) ? PREFIX.length : 0) || '/'
@@ -673,6 +784,11 @@ async function handle(req, res, ctx) {
     if (route === '/evaluate' && method === 'POST') {
       const body = await readBody(req)
       const payload = body && body.action === 'generate-topic' ? await generateTopic(ctx, body) : await evaluate(ctx, body)
+      return json(res, 200, { ok: true, ...payload })
+    }
+    if (route === '/extract-topic' && method === 'POST') {
+      const body = await readBody(req)
+      const payload = await extractTopicFromImage(ctx, body)
       return json(res, 200, { ok: true, ...payload })
     }
     return json(res, 404, { ok: false, error: `未知接口 ${method} ${route}` })
