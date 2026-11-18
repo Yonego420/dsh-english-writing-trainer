@@ -18,6 +18,16 @@
 - **记录**：本地保存每次作答原文、AI 建议、修改示范、可复用句式和整篇检验结果。
 - **草稿恢复**：写作中的作文、批改结果和当前界面会自动保存；切换侧边栏页面再回来不会丢失。
 
+## 更新
+
+已安装旧版本的用户，用新版覆盖安装即可：
+
+1. 打开 **Plugins → Add plugin → Install a third-party plugin**。
+2. 填入带版本号的 GitHub 地址：`https://github.com/Yonego420/dsh-english-writing-trainer.git#v1.1.0`
+3. 安装后重启 DSH。
+
+也可以从 [Releases](https://github.com/Yonego420/dsh-english-writing-trainer/releases) 下载最新的 `.tgz` 包安装。训练记录保存在宿主文件里，覆盖安装不会清空记录。
+
 ## 使用
 
 1. 左侧栏点击「英语主观题训练」图标。
