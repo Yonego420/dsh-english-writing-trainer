@@ -605,6 +605,26 @@ window.__ModuleLoader__.load({
         note: '2024 年英语二大作文真题：柱状图展示某高校劳动实践课学生的主要收获。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2025-big',
+        source: 'real',
+        year: 2025,
+        kind: 'big',
+        chartType: '柱状图',
+        title: 'Main daily leisure activities of elderly residents in a community',
+        titleZh: '某社区老年人主要日常休闲活动调查',
+        data: [
+          '看电视：90.8%',
+          '散步：68.3%',
+          '养花：34.7%',
+          '阅读：31.8%',
+          '下棋：18.4%',
+        ],
+        directions:
+          'Write an essay based on the chart below. In your essay, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in about 150 words on the ANSWER SHEET. (15 points)',
+        note: '2025 年英语二大作文真题：柱状图展示某社区老年人主要日常休闲活动。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -953,6 +973,22 @@ window.__ModuleLoader__.load({
         directions:
           'Suppose you and Jack are going to do a survey on the protection of old houses in an ancient town. Write him an email to 1) put forward your plan, and 2) ask for his opinion. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email; use “Li Ming” instead. (10 points)',
         note: '2024 年英语二小作文真题：提出计划 + 征求意见。',
+        guidance: SMALL_GUIDE,
+      },
+      {
+        id: 'real-2025-small',
+        source: 'real',
+        year: 2025,
+        kind: 'small',
+        letterType: '邀请信',
+        title: 'An email about a short play based on a classic Chinese novel',
+        titleZh: '向朋友 John 介绍改编自中国古典小说的短剧并邀请他参加',
+        scenario: '你正在策划一部改编自中国古典小说的短剧，写信给朋友 John。',
+        recipient: 'your friend John',
+        keyPoints: ['介绍短剧', '邀请 John 参加'],
+        directions:
+          'Suppose you are planning a short play based on a classic Chinese novel. Write your friend John an email to 1) introduce the play, and 2) invite him to take part in it. You should write about 100 words on the ANSWER SHEET. Do not use your own name. Use “Li Ming” instead. (10 points)',
+        note: '2025 年英语二小作文真题：介绍 + 邀请。',
         guidance: SMALL_GUIDE,
       },
     ]
@@ -1390,6 +1426,29 @@ window.__ModuleLoader__.load({
         note: '2024 年英语二翻译真题：注意“with...”独立主格结构、定语从句和破折号插入语。',
         guidance: { translation: '“a feast for the senses”可译成“一场感官盛宴”；“cutting out the middlemen”可译成“绕过中间商”。' },
       },
+      {
+        id: 'real-2025-trans',
+        source: 'real',
+        year: 2025,
+        kind: 'translation',
+        title: 'Awkward silences in conversation',
+        titleZh: '2025 年英译汉：对话中的尴尬沉默',
+        passage:
+          'You know the moment — the conversation slows, then there\'s a pause. It\'s awkward, and so awkward that some people will panic and say anything. Do we all find such silences so stressful?\n\nResearchers analysed the frequency and impact of gaps greater than seconds during conversations, including an overview of previous studies which indicate that the fear of awkward silences can be so extreme that people avoid talking to strangers, even though doing so is likely to be an enjoyable experience.\n\nDuring conversations with short gaps, people feel more connected to their conversation partners. But such feelings of connection markedly dip when entering a long gap. Long gaps between strangers are likely to be followed by a change in topic.\n\nBut the opposite seems to be true for conversations between friends. Long gaps there saw increased connection. Between friends, longer gaps seem to provide natural moments for reflection and expression.',
+        referencePoints: [
+          'the moment 那个瞬间',
+          'the conversation slows 对话慢下来',
+          'awkward 尴尬的',
+          'panic and say anything 慌乱中随口说话',
+          'frequency and impact 频率和影响',
+          'gaps greater than seconds 超过几秒的停顿',
+          'markedly dip 明显下降',
+          'moments for reflection and expression 反思和表达的时机',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2025 年英语二翻译真题：注意破折号解释、which 定语从句和“markedly dip”的程度。',
+        guidance: { translation: '“gaps greater than seconds”可译成“超过几秒的停顿”；“markedly dip”可译成“明显下降”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
@@ -1634,6 +1693,12 @@ window.__ModuleLoader__.load({
         type: 'bar',
         labels: ['提升了动手能力', '学习了相关知识', '增强了合作能力', '感觉到心情舒畅'],
         series: [{ name: '比例', values: [84.8, 91.3, 32.6, 54.4], unit: '%' }],
+        yLabel: '比例（%）',
+      },
+      'real-2025-big': {
+        type: 'bar',
+        labels: ['看电视', '散步', '养花', '阅读', '下棋'],
+        series: [{ name: '比例', values: [90.8, 68.3, 34.7, 31.8, 18.4], unit: '%' }],
         yLabel: '比例（%）',
       },
       'ai-big-1': {
