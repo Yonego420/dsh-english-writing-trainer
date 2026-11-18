@@ -625,6 +625,25 @@ window.__ModuleLoader__.load({
         note: '2025 年英语二大作文真题：柱状图展示某社区老年人主要日常休闲活动。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2026-big',
+        source: 'real',
+        year: 2026,
+        kind: 'big',
+        chartType: '柱状图',
+        title: 'A survey on views about children’s outdoor activities',
+        titleZh: '某项关于儿童户外活动看法的调查',
+        data: [
+          '满足好奇心：54.60%',
+          '促进观察力：54.50%',
+          '强身健体：37.20%',
+          '增强亲子互动：33.20%',
+        ],
+        directions:
+          'Write an essay based on the chart below. In your essay, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in 150 words on the ANSWER SHEET. (15 points)',
+        note: '2026 年英语二大作文真题：柱状图展示关于儿童户外活动看法的调查。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -989,6 +1008,22 @@ window.__ModuleLoader__.load({
         directions:
           'Suppose you are planning a short play based on a classic Chinese novel. Write your friend John an email to 1) introduce the play, and 2) invite him to take part in it. You should write about 100 words on the ANSWER SHEET. Do not use your own name. Use “Li Ming” instead. (10 points)',
         note: '2025 年英语二小作文真题：介绍 + 邀请。',
+        guidance: SMALL_GUIDE,
+      },
+      {
+        id: 'real-2026-small',
+        source: 'real',
+        year: 2026,
+        kind: 'small',
+        letterType: '回复信',
+        title: 'An email about Jack’s family travel video',
+        titleZh: '回复 Jack 分享的中国旅行视频并表达想了解更多',
+        scenario: '朋友 Jack 分享了一段家人在中国旅行的视频，你写信回复他。',
+        recipient: 'your friend Jack',
+        keyPoints: ['表达对视频的感受', '表达想了解更多旅行细节的愿望'],
+        directions:
+          'Suppose your friend Jack has shared with you a video of his family’s travel in China. Write an email to tell him 1) how you feel about the video, and 2) your wish to learn more about their travel. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email; use “Li Ming” instead. (10 points)',
+        note: '2026 年英语二小作文真题：视频感受 + 想了解更多。',
         guidance: SMALL_GUIDE,
       },
     ]
@@ -1449,6 +1484,29 @@ window.__ModuleLoader__.load({
         note: '2025 年英语二翻译真题：注意破折号解释、which 定语从句和“markedly dip”的程度。',
         guidance: { translation: '“gaps greater than seconds”可译成“超过几秒的停顿”；“markedly dip”可译成“明显下降”。' },
       },
+      {
+        id: 'real-2026-trans',
+        source: 'real',
+        year: 2026,
+        kind: 'translation',
+        title: 'The psychology of clothing',
+        titleZh: '2026 年英译汉：穿着与心理',
+        passage:
+          'The influence of wearables on psychology refers to how the clothes we wear affect our thoughts, feelings, and behaviors. Clothing is not just about covering our bodies; it plays a significant role in shaping our self-perception and interactions with others.\n\nOne aspect of this influence is self-expression. The clothes we choose can reflect our personality, mood, and identity. Whether we opt for bold, colorful outfits or prefer more understated styles, our dress choices convey messages about who we are and how we want to be perceived.\n\nAdditionally, clothing can impact our confidence levels. When we wear clothes that make us feel comfortable and confident, it can positively affect our self-esteem and overall mood.\n\nMoreover, cultural and societal influences play a significant role in shaping our dress choices. Different cultures have their norms and expectations regarding dress, which can influence the types of clothing people wear and the meanings attributed to them.',
+        referencePoints: [
+          'the influence of wearables on psychology 穿着对心理的影响',
+          'self-perception 自我认知',
+          'self-expression 自我表达',
+          'understated styles 低调的风格',
+          'convey messages 传达信息',
+          'self-esteem 自尊',
+          'norms and expectations 规范和期待',
+          'meanings attributed to them 赋予它们的意义',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2026 年英语二翻译真题：注意“wearables”在此处指穿着而非可穿戴设备，以及“attributed to”的被动结构。',
+        guidance: { translation: '“wearables”在本篇中指“穿着/服饰”，不要译成“可穿戴设备”；“meanings attributed to them”可译成“人们赋予它们的意义”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
@@ -1699,6 +1757,12 @@ window.__ModuleLoader__.load({
         type: 'bar',
         labels: ['看电视', '散步', '养花', '阅读', '下棋'],
         series: [{ name: '比例', values: [90.8, 68.3, 34.7, 31.8, 18.4], unit: '%' }],
+        yLabel: '比例（%）',
+      },
+      'real-2026-big': {
+        type: 'bar',
+        labels: ['满足好奇心', '促进观察力', '强身健体', '增强亲子互动'],
+        series: [{ name: '比例', values: [54.6, 54.5, 37.2, 33.2], unit: '%' }],
         yLabel: '比例（%）',
       },
       'ai-big-1': {
