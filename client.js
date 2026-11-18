@@ -561,6 +561,31 @@ window.__ModuleLoader__.load({
         note: '2022 年英语二大作文真题：柱状图对比 2018—2020 年全国快递业务量与农村快递业务量。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2023-big',
+        source: 'real',
+        year: 2023,
+        kind: 'big',
+        chartType: '折线图',
+        title: 'Health literacy level of Chinese residents (2012–2021)',
+        titleZh: '2012—2021 年我国居民健康素养水平',
+        data: [
+          '2012 年：8.80%',
+          '2013 年：9.48%',
+          '2014 年：9.79%',
+          '2015 年：10.25%',
+          '2016 年：11.58%',
+          '2017 年：14.18%',
+          '2018 年：17.06%',
+          '2019 年：19.17%',
+          '2020 年：23.15%',
+          '2021 年：25.40%',
+        ],
+        directions:
+          'Write an essay based on chart below. In your writing, you should 1) describe and interpret the chart, and 2) give your comments. You should write about 150 words on the ANSWER SHEET. (15 points)',
+        note: '2023 年英语二大作文真题：折线图展示 2012—2021 年我国居民健康素养水平持续上升。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -877,6 +902,22 @@ window.__ModuleLoader__.load({
         directions:
           'Suppose you are planning a campus food festival. Write an email to the international students in your university to [1] introduce the food festival, [2] invite them to participate. You should write neatly on ANSWER SHEET 2. Do not sign your own name at the end of the e-mail. Use “Li Ming” instead. Do not write the address. (10 points)',
         note: '2022 年英语二小作文真题：介绍 + 邀请。',
+        guidance: SMALL_GUIDE,
+      },
+      {
+        id: 'real-2023-small',
+        source: 'real',
+        year: 2023,
+        kind: 'small',
+        letterType: '建议信',
+        title: 'An email suggesting an exhibition or a robot show',
+        titleZh: '朋友 David 询问周日看艺术展还是机器人展，写信建议并说明理由',
+        scenario: '周日同时有艺术展和机器人展，朋友 David 问你应该去哪一个。',
+        recipient: 'your friend David',
+        keyPoints: ['在艺术展和机器人展中给出建议', '说明推荐理由'],
+        directions:
+          'An art exhibition and a robot show are to be held on Sunday. Your friend David asks which one he should go to. Write him an email to 1) make a suggestion, and 2) give your reason(s). Write your answer in about 100 words on the ANSWER SHEET 2. Do not sign your own name in your email; use “Li Ming” instead. (10 points)',
+        note: '2023 年英语二小作文真题：建议 + 理由。',
         guidance: SMALL_GUIDE,
       },
     ]
@@ -1269,6 +1310,29 @@ window.__ModuleLoader__.load({
         note: '2022 年英语二翻译真题：注意“with which”定语从句和“second nature”的意译。',
         guidance: { translation: '“thinking outside the box”可译成“跳出固有思维”；“second nature”可译成“习惯成自然”。' },
       },
+      {
+        id: 'real-2023-trans',
+        source: 'real',
+        year: 2023,
+        kind: 'translation',
+        title: 'Wordsworth, Romanticism and poetry',
+        titleZh: '2023 年英译汉：华兹华斯、浪漫主义与诗歌',
+        passage:
+          'In the late 18th century, William Wordsworth became famous for his poems about nature. And he was one of the founders of a movement called Romanticism, which celebrated the wonders of the natural world.\n\nPoetry is powerful. Its energy and rhythm can capture a reader, transport them to another world and make them see things differently. Through carefully selected words and phrases, poems can be dramatic, funny, beautiful, moving and inspiring.\n\nNo one knows for sure when poetry began but it has been around for thousands of years, even before people could write. It was a way to tell stories and pass down history. It is closely related to song and even when written it is usually created to be performed out loud. Poems really come to life when they are recited. This can also help with understanding them too, because the rhythm and sounds of the words become clearer.',
+        referencePoints: [
+          'become famous for 因……而闻名',
+          'one of the founders of ……的创始人之一',
+          'celebrate the wonders of the natural world 赞美自然界的奇妙',
+          'capture a reader 吸引读者',
+          'transport them to another world 把他们带到另一个世界',
+          'pass down history 传承历史',
+          'come to life 变得生动；活起来',
+          'be recited 被朗诵',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2023 年英语二翻译真题：注意“which”定语从句、“transport”的引申义和“come to life”的意译。',
+        guidance: { translation: '“transport them to another world”不宜直译成“运输”，可译成“把读者带入另一个世界”；“come to life”可译成“变得生动起来”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
@@ -1496,6 +1560,18 @@ window.__ModuleLoader__.load({
           { name: '农村', values: [12, 15, 30], unit: '10亿件' },
         ],
         yLabel: '快递业务量（10 亿件）',
+      },
+      'real-2023-big': {
+        type: 'line',
+        labels: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+        series: [
+          {
+            name: '健康素养水平',
+            values: [8.8, 9.48, 9.79, 10.25, 11.58, 14.18, 17.06, 19.17, 23.15, 25.4],
+            unit: '%',
+          },
+        ],
+        yLabel: '比例（%）',
       },
       'ai-big-1': {
         type: 'bar',
