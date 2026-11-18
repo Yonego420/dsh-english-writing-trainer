@@ -586,6 +586,25 @@ window.__ModuleLoader__.load({
         note: '2023 年英语二大作文真题：折线图展示 2012—2021 年我国居民健康素养水平持续上升。',
         guidance: BIG_GUIDE,
       },
+      {
+        id: 'real-2024-big',
+        source: 'real',
+        year: 2024,
+        kind: 'big',
+        chartType: '柱状图',
+        title: 'What students gained from labour practice courses',
+        titleZh: '某高校劳动实践课学生主要收获调查',
+        data: [
+          '提升了动手能力：84.8%',
+          '学习了相关知识：91.3%',
+          '增强了合作能力：32.6%',
+          '感觉到心情舒畅：54.4%',
+        ],
+        directions:
+          'Write an essay based on the chart below. In your essay, you should 1) describe and interpret the chart, and 2) give your comments. Write your answer in about 150 words on the ANSWER SHEET. (15 points)',
+        note: '2024 年英语二大作文真题：柱状图展示某高校劳动实践课学生的主要收获。',
+        guidance: BIG_GUIDE,
+      },
     ]
 
     const AI_BIG = [
@@ -918,6 +937,22 @@ window.__ModuleLoader__.load({
         directions:
           'An art exhibition and a robot show are to be held on Sunday. Your friend David asks which one he should go to. Write him an email to 1) make a suggestion, and 2) give your reason(s). Write your answer in about 100 words on the ANSWER SHEET 2. Do not sign your own name in your email; use “Li Ming” instead. (10 points)',
         note: '2023 年英语二小作文真题：建议 + 理由。',
+        guidance: SMALL_GUIDE,
+      },
+      {
+        id: 'real-2024-small',
+        source: 'real',
+        year: 2024,
+        kind: 'small',
+        letterType: '计划信',
+        title: 'An email about a survey on old house protection',
+        titleZh: '与 Jack 商量古镇老宅保护调查计划并征求他的意见',
+        scenario: '你和 Jack 准备在古镇做一项关于老宅保护的调查，写信与他商量计划。',
+        recipient: 'your friend Jack',
+        keyPoints: ['提出调查计划', '征求 Jack 的意见'],
+        directions:
+          'Suppose you and Jack are going to do a survey on the protection of old houses in an ancient town. Write him an email to 1) put forward your plan, and 2) ask for his opinion. Write your answer in about 100 words on the ANSWER SHEET. Do not use your own name in your email; use “Li Ming” instead. (10 points)',
+        note: '2024 年英语二小作文真题：提出计划 + 征求意见。',
         guidance: SMALL_GUIDE,
       },
     ]
@@ -1333,6 +1368,28 @@ window.__ModuleLoader__.load({
         note: '2023 年英语二翻译真题：注意“which”定语从句、“transport”的引申义和“come to life”的意译。',
         guidance: { translation: '“transport them to another world”不宜直译成“运输”，可译成“把读者带入另一个世界”；“come to life”可译成“变得生动起来”。' },
       },
+      {
+        id: 'real-2024-trans',
+        source: 'real',
+        year: 2024,
+        kind: 'translation',
+        title: 'Farmers’ markets',
+        titleZh: '2024 年英译汉：农夫市集',
+        passage:
+          'With the smell of coffee and fresh bread floating in the air, stalls bursting with colourful vegetables and tempting cheeses, and the buzz of friendly chats, farmers’ markets are a feast for the senses. They also provide an opportunity to talk to the people responsible for growing or raising your food, support your local economy and pick up fresh seasonal produce — all at the same time.\n\nFarmers’ markets are usually weekly or monthly events, most often with outdoor stalls, which allow farmers or producers to sell their food directly to customers. The size or regularity of markets can vary from season to season, depending on the area’s agricultural calendar, and you’re likely to find different produce on sale at different times of the year. By cutting out the middlemen, the farmers secure more profit for their produce. Shoppers also benefit from seeing exactly where — and to who — their money is going.',
+        referencePoints: [
+          'a feast for the senses 感官的盛宴',
+          'be responsible for 负责',
+          'local economy 地方经济',
+          'seasonal produce 当季农产品',
+          'cut out the middlemen 去掉中间商',
+          'secure more profit 获得更多利润',
+          'where — and to who — their money is going 他们的钱去了哪里、给了谁',
+        ],
+        directions: TRANS_DIRECTIONS,
+        note: '2024 年英语二翻译真题：注意“with...”独立主格结构、定语从句和破折号插入语。',
+        guidance: { translation: '“a feast for the senses”可译成“一场感官盛宴”；“cutting out the middlemen”可译成“绕过中间商”。' },
+      },
     ]
 
     const AI_TRANSLATIONS = [
@@ -1571,6 +1628,12 @@ window.__ModuleLoader__.load({
             unit: '%',
           },
         ],
+        yLabel: '比例（%）',
+      },
+      'real-2024-big': {
+        type: 'bar',
+        labels: ['提升了动手能力', '学习了相关知识', '增强了合作能力', '感觉到心情舒畅'],
+        series: [{ name: '比例', values: [84.8, 91.3, 32.6, 54.4], unit: '%' }],
         yLabel: '比例（%）',
       },
       'ai-big-1': {
