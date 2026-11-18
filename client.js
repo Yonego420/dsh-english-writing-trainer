@@ -810,6 +810,22 @@ window.__ModuleLoader__.load({
         note: '2020 年英语二小作文真题：介绍 + 建议。',
         guidance: SMALL_GUIDE,
       },
+      {
+        id: 'real-2021-small',
+        source: 'real',
+        year: 2021,
+        kind: 'small',
+        letterType: '邀请信',
+        title: 'An email inviting Jack to an online meeting',
+        titleZh: '邀请国际学生 Jack 参加线上会议并告知细节',
+        scenario: '你正在组织一场线上会议，写信邀请国际学生 Jack 参加。',
+        recipient: 'Jack, an international student',
+        keyPoints: ['邀请 Jack 参加线上会议', '告知会议的时间、平台和主要安排'],
+        directions:
+          'Suppose you are organizing an online meeting. Write an email to Jack, an international student, to 1) invite him to participate, and 2) tell him the details. You should write neatly on ANSWER SHEET 2. Do not sign your own name at the end of the e-mail. Use “Li Ming” instead. Do not write the address. (10 points)',
+        note: '2021 年英语二小作文真题：邀请 + 告知细节。',
+        guidance: SMALL_GUIDE,
+      },
     ]
 
     const AI_SMALL = [
