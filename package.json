@@ -1,6 +1,6 @@
 {
   "name": "dsh-english-writing-trainer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "description": "考研英语二主观题训练：大作文、小作文、翻译的分段 AI 批改、对应图表与整篇综合检验",

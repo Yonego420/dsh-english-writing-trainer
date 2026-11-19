@@ -37,6 +37,8 @@ window.__ModuleLoader__.load({
       'action.exam': '去综合检验',
       'action.reset': '清空全部记录',
       'action.confirmReset': '确认清空',
+      'action.deleteRecord': '删除这条记录',
+      'action.confirmDelete': '确认删除',
       'action.cancel': '取消',
       'action.refresh': '刷新',
       'label.topic': '题目',
@@ -77,6 +79,7 @@ window.__ModuleLoader__.load({
       'label.history': '训练记录',
       'label.exams': '综合检验记录',
       'label.clearConfirm': '确定要清空全部训练和综合检验记录吗？这个操作不可撤销。',
+      'label.deleteConfirm': '确定删除这条记录吗？删除后无法恢复。',
       'label.noExam': '还没有综合检验记录。',
       'label.timer': '建议用时',
       'label.bankAll': '全部',
@@ -130,6 +133,8 @@ window.__ModuleLoader__.load({
       'action.exam': 'Mock exam',
       'action.reset': 'Clear all data',
       'action.confirmReset': 'Confirm clear',
+      'action.deleteRecord': 'Delete this record',
+      'action.confirmDelete': 'Confirm delete',
       'action.cancel': 'Cancel',
       'action.refresh': 'Refresh',
       'label.topic': 'Topic',
@@ -170,6 +175,7 @@ window.__ModuleLoader__.load({
       'label.history': 'Practice history',
       'label.exams': 'Mock exams',
       'label.clearConfirm': 'Clear all practice and mock-exam records? This cannot be undone.',
+      'label.deleteConfirm': 'Delete this record? This cannot be undone.',
       'label.noExam': 'No mock exam yet.',
       'label.timer': 'Suggested time',
       'label.bankAll': 'All',
@@ -2358,6 +2364,11 @@ window.__ModuleLoader__.load({
       .ew-btnQuiet{background:transparent;color:var(--dsw-alias-label-secondary);border-color:transparent}
       .ew-btnQuiet:hover:not(:disabled){color:var(--dsw-alias-label-primary);background:var(--dsw-alias-bg-layer-2)}
       .ew-btnSmall{font-size:11.5px;padding:4px 10px;border-radius:7px}
+      .ew-btnDanger{background:var(--dsw-alias-state-error-primary);color:var(--dsw-alias-bg-base);border-color:transparent}
+      .ew-btnGhost.ew-btnDanger{background:transparent;color:var(--dsw-alias-state-error-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 45%,var(--dsw-alias-border-l2))}
+      .ew-btnGhost.ew-btnDanger:hover:not(:disabled){background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 8%,transparent)}
+      .ew-deleteBox{margin-top:14px;padding-top:12px;border-top:1px dashed var(--dsw-alias-border-l1)}
+      .ew-deleteConfirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
       .ew-error{margin:0 0 14px;padding:9px 12px;border-radius:9px;border:1px solid color-mix(in srgb,var(--dsw-alias-state-error-primary) 55%,var(--dsw-alias-border-l1));background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 7%,var(--dsw-alias-bg-layer-1));color:var(--dsw-alias-state-error-primary);font-size:12px}
       .ew-loading{display:flex;align-items:center;gap:10px;padding:16px;border-radius:11px;border:1px dashed var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-secondary);font-size:12.5px}
       .ew-spinner{width:16px;height:16px;border-radius:50%;border:2px solid var(--dsw-alias-border-l2);border-top-color:var(--dsw-alias-brand-primary);animation:ewspin .9s linear infinite;flex:none}
@@ -3736,6 +3747,7 @@ window.__ModuleLoader__.load({
     function HistoryDetail(props) {
       const entry = props.entry
       const t = props.t
+      const [confirmDelete, setConfirmDelete] = useState(false)
       const fb = entry.feedback || {}
       const issues = Array.isArray(fb.issues) ? fb.issues.filter((row) => row && typeof row === 'object') : []
       const reusable = Array.isArray(fb.reusable) ? fb.reusable.filter((row) => row && row.expression) : []
@@ -3871,6 +3883,48 @@ window.__ModuleLoader__.load({
               'div',
               { className: 'ew-actions' },
               h('button', { type: 'button', className: 'ew-btn ew-btnGhost ew-btnSmall', onClick: props.onPractice }, t('action.practice')),
+            )
+          : null,
+        props.onDelete
+          ? h(
+              'div',
+              { className: 'ew-deleteBox' },
+              confirmDelete
+                ? h(
+                    'div',
+                    { className: 'ew-deleteConfirm' },
+                    h('span', null, t('label.deleteConfirm')),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'ew-btn ew-btnSmall ew-btnDanger',
+                        onClick: () => {
+                          props.onDelete(entry.id)
+                          setConfirmDelete(false)
+                        },
+                      },
+                      t('action.confirmDelete'),
+                    ),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'ew-btn ew-btnGhost ew-btnSmall',
+                        onClick: () => setConfirmDelete(false),
+                      },
+                      t('action.cancel'),
+                    ),
+                  )
+                : h(
+                    'button',
+                    {
+                      type: 'button',
+                      className: 'ew-btn ew-btnGhost ew-btnSmall ew-btnDanger',
+                      onClick: () => setConfirmDelete(true),
+                    },
+                    t('action.deleteRecord'),
+                  ),
             )
           : null,
       )
@@ -4443,6 +4497,24 @@ window.__ModuleLoader__.load({
         }
       }, [examBusy, examKind, examText, examTopic, t])
 
+      const deleteHistoryRecord = useCallback((id) => {
+        setState((prev) => ({
+          ...prev,
+          history: (Array.isArray(prev.history) ? prev.history : []).filter((entry) => entry.id !== id),
+        }))
+        if (historyOpen === id) setHistoryOpen(null)
+        showToast('已删除这条训练记录')
+      }, [historyOpen, showToast])
+
+      const deleteExamRecord = useCallback((id) => {
+        setState((prev) => ({
+          ...prev,
+          exams: (Array.isArray(prev.exams) ? prev.exams : []).filter((entry) => entry.id !== id),
+        }))
+        if (historyOpen === id) setHistoryOpen(null)
+        showToast('已删除这条综合检验记录')
+      }, [historyOpen, showToast])
+
       const resetAll = useCallback(() => {
         setState(emptyState())
         clearDraft()
@@ -4928,6 +5000,7 @@ window.__ModuleLoader__.load({
                           entry,
                           t,
                           onCopy: copyText,
+                          onDelete: deleteHistoryRecord,
                           onPractice: () => {
                             const topic = topicById(state, entry.topicId)
                             const item = itemById(entry.itemId)
@@ -4976,7 +5049,7 @@ window.__ModuleLoader__.load({
                         ),
                         h('span', { className: 'ew-historyScore' }, `${entry.score}/${entry.maxScore}`),
                       ),
-                      isOpen ? h(HistoryDetail, { entry, t, onCopy: copyText }) : null,
+                      isOpen ? h(HistoryDetail, { entry, t, onCopy: copyText, onDelete: deleteExamRecord }) : null,
                     )
                   }),
                 ),
